@@ -13,7 +13,7 @@ type OutgoingItem struct {
 	Note      string `json:"note"`
 }
 
-// ItemsHandleFunc to be used as http.HandleFunc for Outgoing Item API
+// OutgoingItemsHandleFunc to be used as http.HandleFunc for Outgoing Item API
 func OutgoingItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:

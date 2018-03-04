@@ -15,7 +15,7 @@ type IncomingItem struct {
 	Note      string `json:"note"`
 }
 
-// ItemsHandleFunc to be used as http.HandleFunc for Incoming Item API
+// IncomingItemsHandleFunc to be used as http.HandleFunc for Incoming Item API
 func IncomingItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
