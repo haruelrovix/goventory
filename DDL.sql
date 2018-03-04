@@ -43,3 +43,10 @@ CREATE TABLE IncomingTransactions(
   receipt varchar(14),
   foreign key(transaction_id) references transactions(id)
 );
+
+CREATE TABLE OutgoingTransactions(
+  transaction_id int,
+  order_id varchar(18),
+  foreign key(transaction_id) references transactions(id),
+  foreign key(order_id) references OrderDetails(order_id)
+);
