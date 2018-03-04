@@ -41,3 +41,11 @@ VALUES ( 'SSI-D00791077-MM-BWH', 0, 100 ),
 ( 'SSI-D00864612-LL-NAV', 0, 47 ),
 ( 'SSI-D00864612-LL-NAV', 1, 90 ),
 ( 'SSI-D01220357-SS-YEL', 0, 74 );
+
+INSERT INTO TransactionTypes (code, description)
+VALUES ( 'BM', 'Barang Masuk' ),
+( 'BK', 'Barang Keluar' );
+
+INSERT INTO transactions (id, timestamp, sku )
+VALUES ( 'BM', 'Barang Masuk' ),
+( 'BK', 'Barang Keluar' );
