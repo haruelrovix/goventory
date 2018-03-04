@@ -39,5 +39,5 @@ INSERT INTO stock (item_sku, warehouse_id, amount)
 VALUES ( 'SSI-D00791077-MM-BWH', 0, 100 ),
 ( 'SSI-D00791077-MM-BWH', 1, 54 ),
 ( 'SSI-D00864612-LL-NAV', 0, 47 ),
-( 'SSI-D00791077-MM-BWH', 1, 90 ),
+( 'SSI-D00864612-LL-NAV', 1, 90 ),
 ( 'SSI-D01220357-SS-YEL', 0, 74 );

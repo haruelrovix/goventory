@@ -10,8 +10,9 @@ import (
 
 // Item type with SKU and Name
 type Item struct {
-	SKU  string `json:"sku"`
-	Name string `json:"name"`
+	SKU   string `json:"sku"`
+	Name  string `json:"name"`
+	Total string `json:"total"`
 }
 
 var DB *sql.DB
@@ -31,10 +32,15 @@ func ItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 // Get Items from database
 func GetItems() []Item {
 	items := []Item{}
-	rows, _ := DB.Query("SELECT sku, name FROM items")
+	rows, _ := DB.Query(`
+		SELECT sku, name, COALESCE(SUM(amount),0) AS total
+		FROM items i LEFT JOIN stock s 
+		ON i.sku = s.item_sku GROUP BY sku;
+	`)
+
 	for rows.Next() {
 		row := Item{}
-		rows.Scan(&row.SKU, &row.Name)
+		rows.Scan(&row.SKU, &row.Name, &row.Total)
 		items = append(items, row)
 	}
 
