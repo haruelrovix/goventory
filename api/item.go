@@ -6,7 +6,7 @@ import "net/http"
 type Item struct {
 	SKU   string `json:"sku"`
 	Name  string `json:"name"`
-	Total string `json:"total"`
+	Total int    `json:"total"`
 }
 
 // ItemsHandleFunc to be used as http.HandleFunc for Item API

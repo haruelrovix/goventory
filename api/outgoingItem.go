@@ -1,16 +1,19 @@
 package api
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 // Barang Keluar
 type OutgoingItem struct {
-	Timestamp string `json:"timestamp"`
-	SKU       string `json:"sku"`
-	Name      string `json:"name"`
-	Amount    string `json:"amount"`
-	Price     string `json:"price"`
-	Total     string `json:"total"`
-	Note      string `json:"note"`
+	Timestamp time.Time `json:"timestamp"`
+	SKU       string    `json:"sku"`
+	Name      string    `json:"name"`
+	Amount    int       `json:"amount"`
+	Price     float64   `json:"price"`
+	Total     float64   `json:"total"`
+	Note      string    `json:"note"`
 }
 
 // OutgoingItemsHandleFunc to be used as http.HandleFunc for Outgoing Item API

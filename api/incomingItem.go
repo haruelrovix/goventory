@@ -1,18 +1,21 @@
 package api
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 // Barang Masuk
 type IncomingItem struct {
-	Timestamp string `json:"timestamp"`
-	SKU       string `json:"sku"`
-	Name      string `json:"name"`
-	Booking   string `json:"booking"`
-	Amount    string `json:"amount"`
-	Price     string `json:"price"`
-	Total     string `json:"total"`
-	Receipt   string `json:"receipt"`
-	Note      string `json:"note"`
+	Timestamp time.Time `json:"timestamp"`
+	SKU       string    `json:"sku"`
+	Name      string    `json:"name"`
+	Booking   string    `json:"booking"`
+	Amount    int       `json:"amount"`
+	Price     float64   `json:"price"`
+	Total     float64   `json:"total"`
+	Receipt   string    `json:"receipt"`
+	Note      string    `json:"note"`
 }
 
 // IncomingItemsHandleFunc to be used as http.HandleFunc for Incoming Item API
