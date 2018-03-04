@@ -27,6 +27,7 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/items", api.ItemsHandleFunc)
 	http.HandleFunc("/api/barangmasuk", api.IncomingItemsHandleFunc)
+	http.HandleFunc("/api/barangkeluar", api.OutgoingItemsHandleFunc)
 
 	http.ListenAndServe(port(), nil)
 }
