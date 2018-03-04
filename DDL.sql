@@ -39,8 +39,7 @@ CREATE TABLE OrderDetails(
 
 CREATE TABLE IncomingTransactions(
   transaction_id int,
-  order_id varchar(18),
+  booking int,
   receipt varchar(14),
-  foreign key(transaction_id) references transactions(id),
-  foreign key(order_id) references OrderDetails(id)
+  foreign key(transaction_id) references transactions(id)
 );
