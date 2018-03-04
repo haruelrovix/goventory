@@ -1,52 +1,52 @@
 CREATE TABLE items(
-  sku varchar(20) primary key,
-  name varchar(50)
+  sku VARCHAR(20) PRIMARY KEY,
+  name VARCHAR(50)
 );
 
 CREATE TABLE warehouses(
-  id int primary key,
-  description varchar(50)
+  id INT PRIMARY KEY,
+  description VARCHAR(50)
 );
 
 CREATE TABLE stock(
-  item_sku varchar(20),
-  warehouse_id int,
-  amount int,
-  foreign key(item_sku) references items(sku),
-  foreign key(warehouse_id) references warehouses(warehouse_id)
+  item_sku VARCHAR(20),
+  warehouse_id INT,
+  amount INT,
+  FOREIGN KEY(item_sku) REFERENCES items(sku),
+  FOREIGN KEY(warehouse_id) REFERENCES warehouses(warehouse_id)
 );
 
 CREATE TABLE TransactionTypes(
-  code varchar(2) primary key,
-  description varchar(50)
+  code VARCHAR(2) PRIMARY KEY,
+  description VARCHAR(50)
 );
 
 CREATE TABLE transactions(
-  id int primary key,
-  amount int,
-  note varchar(50),
-  price int,
+  id INT PRIMARY KEY,
+  amount INT,
+  note VARCHAR(50),
+  price NUMERIC,
   timestamp DATETIME,
-  transaction_code varchar(2),
-  transaction_sku varchar(20),
-  foreign key(transaction_code) references TransactionTypes(code),
-  foreign key(transaction_sku) references items(sku)
+  transaction_code VARCHAR(2),
+  transaction_sku VARCHAR(20),
+  FOREIGN KEY(transaction_code) REFERENCES TransactionTypes(code),
+  FOREIGN KEY(transaction_sku) REFERENCES items(sku)
 );
 
 CREATE TABLE OrderDetails(
-  id varchar(18) primary key
+  id VARCHAR(18) PRIMARY KEY
 );
 
 CREATE TABLE IncomingTransactions(
-  transaction_id int,
-  booking int,
-  receipt varchar(14),
-  foreign key(transaction_id) references transactions(id)
+  transaction_id INT,
+  booking INT,
+  receipt VARCHAR(14),
+  FOREIGN KEY(transaction_id) REFERENCES transactions(id)
 );
 
 CREATE TABLE OutgoingTransactions(
-  transaction_id int,
-  order_id varchar(18),
-  foreign key(transaction_id) references transactions(id),
-  foreign key(order_id) references OrderDetails(order_id)
+  transaction_id INT,
+  order_id VARCHAR(18),
+  FOREIGN KEY(transaction_id) REFERENCES transactions(id),
+  FOREIGN KEY(order_id) REFERENCES OrderDetails(order_id)
 );
