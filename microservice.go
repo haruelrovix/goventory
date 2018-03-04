@@ -10,13 +10,14 @@ import (
 )
 
 // Config
+const driver = "sqlite3"
 const database = "inventory.db"
 
 var db *sql.DB
 
 func main() {
 	// Connect to database
-	db, err := sql.Open("sqlite3", database)
+	db, err := sql.Open(driver, database)
 	if err != nil {
 		panic(err)
 	}
@@ -25,6 +26,7 @@ func main() {
 	// Handle HTTP request
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/items", api.ItemsHandleFunc)
+	http.HandleFunc("/api/barangmasuk", api.IncomingItemsHandleFunc)
 
 	http.ListenAndServe(port(), nil)
 }
