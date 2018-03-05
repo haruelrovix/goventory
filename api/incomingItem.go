@@ -55,6 +55,7 @@ func GetIncomingItems() []IncomingItem {
 		)
 		incomingItems = append(incomingItems, row)
 	}
+	rows.Close()
 
 	return incomingItems
 }

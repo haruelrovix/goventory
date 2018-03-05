@@ -129,6 +129,7 @@ func CreateSalesReport(timeFrom string, timeTo string) SalesReport {
 		Items:   transactionReport,
 		Summary: summary,
 	}
+	rows.Close()
 
 	return report
 }

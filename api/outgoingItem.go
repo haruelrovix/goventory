@@ -51,6 +51,7 @@ func GetOutgoingItems() []OutgoingItem {
 		)
 		OutgoingItems = append(OutgoingItems, row)
 	}
+	rows.Close()
 
 	return OutgoingItems
 }

@@ -76,6 +76,7 @@ func CreateReport() Report {
 		Items:   itemReport,
 		Summary: summary,
 	}
+	rows.Close()
 
 	return report
 }
