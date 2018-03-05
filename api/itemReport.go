@@ -26,7 +26,7 @@ type Report struct {
 	Summary Summary      `json:"summary"`
 }
 
-// ItemReportHandleFunc to be used as http.HandleFunc for Incoming Item API
+// ItemReportHandleFunc to be used as http.HandleFunc for Report Item API
 func ItemReportHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
