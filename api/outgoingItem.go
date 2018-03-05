@@ -16,11 +16,15 @@ type OutgoingItem struct {
 	Note      string    `json:"note"`
 }
 
+type OutgoingItems struct {
+	Items []OutgoingItem `json:"outgoingitems"`
+}
+
 // OutgoingItemsHandleFunc to be used as http.HandleFunc for Outgoing Item API
 func OutgoingItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
-		OutgoingItems := GetOutgoingItems()
+		OutgoingItems := OutgoingItems{Items: GetOutgoingItems()}
 		writeJSON(w, OutgoingItems)
 	default:
 		writeDefaultResponse(w)

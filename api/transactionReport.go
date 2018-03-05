@@ -23,8 +23,8 @@ type TransactionReport struct {
 
 type SalesSummary struct {
 	PrintDate   string  `json:"printdate"`
-	TimeFrom    string  `json:"timefrom"`
-	TimeTo      string  `json:"timeto"`
+	StartDate   string  `json:"startdate"`
+	EndDate     string  `json:"enddate"`
 	TotalSales  int     `json:"totalsales"`
 	TotalAmount int     `json:"totalamount"`
 	TotalValue  float64 `json:"totalvalue"`
@@ -47,23 +47,23 @@ func validateDate(date string) (time.Time, bool) {
 func TransactionReportHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
-		timeFrom := r.FormValue("timefrom")
-		from, ok := validateDate(timeFrom)
+		startDate := r.FormValue("startdate")
+		from, ok := validateDate(startDate)
 		if !ok {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprintf(w, "Beginning date should be on YYYY-MM-DD format.")
 			return
 		}
-		timeTo := r.FormValue("timeto")
-		to, ok := validateDate(timeTo)
+		endDate := r.FormValue("enddate")
+		to, ok := validateDate(endDate)
 		if !ok {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprintf(w, "End date should be on YYYY-MM-DD format.")
 			return
 		}
-		report := CreateSalesReport(timeFrom, timeTo)
-		report.Summary.TimeFrom = strftime.Format("%d %B %Y", from)
-		report.Summary.TimeTo = strftime.Format("%d %B %Y", to)
+		report := CreateSalesReport(startDate, endDate)
+		report.Summary.StartDate = strftime.Format("%d %B %Y", from)
+		report.Summary.EndDate = strftime.Format("%d %B %Y", to)
 		writeJSON(w, report)
 	default:
 		writeDefaultResponse(w)

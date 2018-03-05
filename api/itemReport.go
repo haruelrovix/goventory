@@ -3,6 +3,8 @@ package api
 import (
 	"net/http"
 	"time"
+
+	strftime "github.com/jehiah/go-strftime"
 )
 
 // Laporan Nilai Barang
@@ -15,10 +17,10 @@ type ItemReport struct {
 }
 
 type Summary struct {
-	PrintDate   time.Time `json:"printdate"`
-	TotalSKU    int       `json:"totalsku"`
-	TotalAmount int       `json:"totalamount"`
-	TotalValue  float64   `json:"totalvalue"`
+	PrintDate   string  `json:"printdate"`
+	TotalSKU    int     `json:"totalsku"`
+	TotalAmount int     `json:"totalamount"`
+	TotalValue  float64 `json:"totalvalue"`
 }
 
 type Report struct {
@@ -67,7 +69,7 @@ func CreateReport() Report {
 		summary.TotalValue += row.Value
 	}
 	summary.TotalSKU = len(itemReport)
-	summary.PrintDate = time.Now()
+	summary.PrintDate = strftime.Format("%d %B %Y", time.Now())
 
 	// Report
 	report := Report{

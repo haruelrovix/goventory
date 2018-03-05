@@ -18,11 +18,15 @@ type IncomingItem struct {
 	Note      string    `json:"note"`
 }
 
+type IncomingItems struct {
+	Items []IncomingItem `json:"incomingitems"`
+}
+
 // IncomingItemsHandleFunc to be used as http.HandleFunc for Incoming Item API
 func IncomingItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
-		incomingItems := GetIncomingItems()
+		incomingItems := IncomingItems{Items: GetIncomingItems()}
 		writeJSON(w, incomingItems)
 	default:
 		writeDefaultResponse(w)

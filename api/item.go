@@ -9,11 +9,15 @@ type Item struct {
 	Total int    `json:"total"`
 }
 
+type Items struct {
+	Items []Item `json:"items"`
+}
+
 // ItemsHandleFunc to be used as http.HandleFunc for Item API
 func ItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
-		items := GetItems()
+		items := Items{Items: GetItems()}
 		writeJSON(w, items)
 	default:
 		w.WriteHeader(http.StatusBadRequest)
