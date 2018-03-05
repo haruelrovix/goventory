@@ -71,7 +71,7 @@ func TransactionReportHandleFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 // Create Transaction Report
-func CreateSalesReport(timeFrom string, timeTo string) SalesReport {
+func CreateSalesReport(startDate string, endDate string) SalesReport {
 	transactionReport := []TransactionReport{}
 	rows, _ := DB.Query(`
 		SELECT order_id, timestamp, i.sku, name, amount, price,
@@ -94,8 +94,8 @@ func CreateSalesReport(timeFrom string, timeTo string) SalesReport {
 			) AS dt
 			ON dt.sku = t.transaction_sku
 		WHERE transaction_code = 'BK'
-			AND timestamp BETWEEN '` + timeFrom + ` 00:00:00' 
-				AND '` + timeTo + ` 23:59:59'
+			AND timestamp BETWEEN '` + startDate + ` 00:00:00' 
+				AND '` + endDate + ` 23:59:59'
 		ORDER BY timestamp;
 	`)
 
