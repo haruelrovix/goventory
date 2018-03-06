@@ -26,7 +26,7 @@ func main() {
 	// Handle HTTP request
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/items", api.ItemsHandleFunc)
-	http.HandleFunc("/api/items/", api.ItemsHandleFunc)
+	http.HandleFunc("/api/items/", api.ItemHandleFunc)
 	http.HandleFunc("/api/barangmasuk", api.IncomingItemsHandleFunc)
 	http.HandleFunc("/api/barangkeluar", api.OutgoingItemsHandleFunc)
 	http.HandleFunc("/api/nilaibarang", api.ItemReportHandleFunc)

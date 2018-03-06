@@ -41,6 +41,24 @@ func ItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ItemHandleFunc to be used as http.HandleFunc for an Item API
+func ItemHandleFunc(w http.ResponseWriter, r *http.Request) {
+	sku := r.URL.Path[len("/api/items/"):]
+
+	switch method := r.Method; method {
+	case http.MethodDelete:
+		ok := deleteItem(sku)
+		if !ok {
+			w.WriteHeader(http.StatusInternalServerError)
+		} else {
+			w.WriteHeader(http.StatusOK)
+		}
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Unsupported request method."))
+	}
+}
+
 // Get Items from database
 func getItems() []item {
 	it := []item{}
@@ -82,4 +100,14 @@ func createItem(it item) (string, bool) {
 	}
 
 	return it.SKU, true
+}
+
+// deleteItem removes an item from items table
+func deleteItem(sku string) bool {
+	_, err := DB.Exec("DELETE FROM items WHERE sku = '" + sku + "'")
+	if err != nil {
+		return false
+	}
+
+	return true
 }
