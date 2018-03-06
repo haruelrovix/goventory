@@ -17,8 +17,8 @@ type TransactionReport struct {
 	Amount    int     `json:"amount"`
 	Price     float64 `json:"price"`
 	Purchase  float64 `json:"purchase"`
-	Value     float64 `json:"value"`  // Amount * Price
-	Profit    float64 `json:"profit"` // Value - Harga Beli * Jumlah
+	Omzet     float64 `json:"omzet"`  // Amount * Price
+	Profit    float64 `json:"profit"` // Omzet - Harga Beli * Jumlah
 }
 
 type SalesSummary struct {
@@ -27,7 +27,8 @@ type SalesSummary struct {
 	EndDate     string  `json:"enddate"`
 	TotalSales  int     `json:"totalsales"`
 	TotalAmount int     `json:"totalamount"`
-	TotalValue  float64 `json:"totalvalue"`
+	TotalOmzet  float64 `json:"totalomzet"`
+	TotalProfit float64 `json:"totalprofit"`
 }
 
 type SalesReport struct {
@@ -75,7 +76,7 @@ func CreateSalesReport(startDate string, endDate string) SalesReport {
 	transactionReport := []TransactionReport{}
 	rows, _ := DB.Query(`
 		SELECT order_id, timestamp, i.sku, name, amount, price,
-					(amount * price) AS value, purchase,
+					(amount * price) AS omzet, purchase,
 					((amount * price) - (purchase * amount)) AS profit
 		FROM transactions t
 			INNER JOIN OutgoingTransactions ot
@@ -106,14 +107,15 @@ func CreateSalesReport(startDate string, endDate string) SalesReport {
 		row := TransactionReport{}
 		rows.Scan(
 			&row.OrderID, &row.TimeStamp, &row.SKU, &row.Name, &row.Amount,
-			&row.Price, &row.Value, &row.Purchase, &row.Profit,
+			&row.Price, &row.Omzet, &row.Purchase, &row.Profit,
 		)
-		row.Value = row.Price * float64(row.Amount)
+		row.Omzet = row.Price * float64(row.Amount)
 		transactionReport = append(transactionReport, row)
 
 		// Summary
 		summary.TotalAmount += row.Amount
-		summary.TotalValue += row.Value
+		summary.TotalOmzet += row.Omzet
+		summary.TotalProfit += row.Profit
 
 		if i > 0 && transactionReport[i].OrderID != transactionReport[i-1].OrderID {
 			summary.TotalSales += 1

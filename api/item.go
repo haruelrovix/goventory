@@ -2,7 +2,7 @@ package api
 
 import "net/http"
 
-// Item type with SKU and Name
+// Item type with SKU, Name and Total
 type Item struct {
 	SKU   string `json:"sku"`
 	Name  string `json:"name"`
