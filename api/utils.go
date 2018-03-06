@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3" // Easy connect to SQLite3
 )
 
+// DB driver
 var DB *sql.DB
 
 func writeDefaultResponse(w http.ResponseWriter) {

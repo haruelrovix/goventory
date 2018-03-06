@@ -5,8 +5,7 @@ import (
 	"time"
 )
 
-// Barang Masuk
-type IncomingItem struct {
+type incomingItem struct {
 	Timestamp time.Time `json:"timestamp"`
 	SKU       string    `json:"sku"`
 	Name      string    `json:"name"`
@@ -18,24 +17,23 @@ type IncomingItem struct {
 	Note      string    `json:"note"`
 }
 
-type IncomingItems struct {
-	Items []IncomingItem `json:"incomingitems"`
+type incomingItems struct {
+	Items []incomingItem `json:"incomingitems"`
 }
 
 // IncomingItemsHandleFunc to be used as http.HandleFunc for Incoming Item API
 func IncomingItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
-		incomingItems := IncomingItems{Items: GetIncomingItems()}
-		writeJSON(w, incomingItems)
+		writeJSON(w, incomingItems{Items: getIncomingItems()})
 	default:
 		writeDefaultResponse(w)
 	}
 }
 
-// Get Incoming Items from database
-func GetIncomingItems() []IncomingItem {
-	incomingItems := []IncomingItem{}
+// GetIncomingItems from database
+func getIncomingItems() []incomingItem {
+	items := []incomingItem{}
 	rows, _ := DB.Query(`
 		SELECT timestamp, sku, name, booking, amount, price,
 					 ( booking * price ) AS total, receipt, note
@@ -48,14 +46,14 @@ func GetIncomingItems() []IncomingItem {
 	`)
 
 	for rows.Next() {
-		row := IncomingItem{}
+		row := incomingItem{}
 		rows.Scan(
 			&row.Timestamp, &row.SKU, &row.Name, &row.Booking, &row.Amount,
 			&row.Price, &row.Total, &row.Receipt, &row.Note,
 		)
-		incomingItems = append(incomingItems, row)
+		items = append(items, row)
 	}
 	rows.Close()
 
-	return incomingItems
+	return items
 }

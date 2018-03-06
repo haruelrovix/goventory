@@ -7,8 +7,7 @@ import (
 	strftime "github.com/jehiah/go-strftime"
 )
 
-// Laporan Nilai Barang
-type ItemReport struct {
+type itemReport struct {
 	SKU    string  `json:"sku"`
 	Name   string  `json:"name"`
 	Amount int     `json:"amount"`
@@ -16,32 +15,32 @@ type ItemReport struct {
 	Value  float64 `json:"value"`
 }
 
-type Summary struct {
+type summary struct {
 	PrintDate   string  `json:"printdate"`
 	TotalSKU    int     `json:"totalsku"`
 	TotalAmount int     `json:"totalamount"`
 	TotalValue  float64 `json:"totalvalue"`
 }
 
-type Report struct {
-	Items   []ItemReport `json:"items"`
-	Summary Summary      `json:"summary"`
+type report struct {
+	Items   []itemReport `json:"items"`
+	Summary summary      `json:"summary"`
 }
 
 // ItemReportHandleFunc to be used as http.HandleFunc for Report Item API
 func ItemReportHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
-		report := CreateReport()
+		report := createReport()
 		writeJSON(w, report)
 	default:
 		writeDefaultResponse(w)
 	}
 }
 
-// Create Report
-func CreateReport() Report {
-	itemReport := []ItemReport{}
+// CreateReport produces Report for Nilai Barang
+func createReport() report {
+	items := []itemReport{}
 	rows, _ := DB.Query(`
 		SELECT sku, name, (SUM(booking * price) * 1.0 / SUM(t.amount)) AS price,
 					(SELECT SUM(s.amount)
@@ -56,24 +55,24 @@ func CreateReport() Report {
 		GROUP BY transaction_sku;
 	`)
 
-	summary := Summary{}
+	summary := summary{}
 	for rows.Next() {
 		// ItemReport
-		row := ItemReport{}
+		row := itemReport{}
 		rows.Scan(&row.SKU, &row.Name, &row.Price, &row.Amount)
 		row.Value = row.Price * float64(row.Amount)
-		itemReport = append(itemReport, row)
+		items = append(items, row)
 
 		// Summary
 		summary.TotalAmount += row.Amount
 		summary.TotalValue += row.Value
 	}
-	summary.TotalSKU = len(itemReport)
+	summary.TotalSKU = len(items)
 	summary.PrintDate = strftime.Format("%d %B %Y", time.Now())
 
 	// Report
-	report := Report{
-		Items:   itemReport,
+	report := report{
+		Items:   items,
 		Summary: summary,
 	}
 	rows.Close()

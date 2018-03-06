@@ -8,8 +8,7 @@ import (
 	strftime "github.com/jehiah/go-strftime"
 )
 
-// Laporan Penjualan
-type TransactionReport struct {
+type transactionReport struct {
 	OrderID   string  `json:"orderid"`
 	TimeStamp string  `json:"timestamp"`
 	SKU       string  `json:"sku"`
@@ -21,7 +20,7 @@ type TransactionReport struct {
 	Profit    float64 `json:"profit"` // Omzet - Harga Beli * Jumlah
 }
 
-type SalesSummary struct {
+type salesSummary struct {
 	PrintDate   string  `json:"printdate"`
 	StartDate   string  `json:"startdate"`
 	EndDate     string  `json:"enddate"`
@@ -31,9 +30,9 @@ type SalesSummary struct {
 	TotalProfit float64 `json:"totalprofit"`
 }
 
-type SalesReport struct {
-	Items   []TransactionReport `json:"items"`
-	Summary SalesSummary        `json:"summary"`
+type salesReport struct {
+	Items   []transactionReport `json:"items"`
+	Summary salesSummary        `json:"summary"`
 }
 
 func validateDate(date string) (time.Time, bool) {
@@ -52,17 +51,17 @@ func TransactionReportHandleFunc(w http.ResponseWriter, r *http.Request) {
 		from, ok := validateDate(startDate)
 		if !ok {
 			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "Beginning date should be on YYYY-MM-DD format.")
+			fmt.Fprintf(w, "Should have startdate params in YYYY-MM-DD format.")
 			return
 		}
 		endDate := r.FormValue("enddate")
 		to, ok := validateDate(endDate)
 		if !ok {
 			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "End date should be on YYYY-MM-DD format.")
+			fmt.Fprintf(w, "Should have enddate params in YYYY-MM-DD format.")
 			return
 		}
-		report := CreateSalesReport(startDate, endDate)
+		report := createSalesReport(startDate, endDate)
 		report.Summary.StartDate = strftime.Format("%d %B %Y", from)
 		report.Summary.EndDate = strftime.Format("%d %B %Y", to)
 		writeJSON(w, report)
@@ -71,9 +70,9 @@ func TransactionReportHandleFunc(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Create Transaction Report
-func CreateSalesReport(startDate string, endDate string) SalesReport {
-	transactionReport := []TransactionReport{}
+// CreateSalesReport creates Transaction Report
+func createSalesReport(startDate string, endDate string) salesReport {
+	transaction := []transactionReport{}
 	rows, _ := DB.Query(`
 		SELECT order_id, timestamp, i.sku, name, amount, price,
 					(amount * price) AS omzet, purchase,
@@ -100,35 +99,35 @@ func CreateSalesReport(startDate string, endDate string) SalesReport {
 		ORDER BY timestamp;
 	`)
 
-	summary := SalesSummary{}
+	summary := salesSummary{}
 	i := 0
 	for rows.Next() {
 		// TransactionReport
-		row := TransactionReport{}
+		row := transactionReport{}
 		rows.Scan(
 			&row.OrderID, &row.TimeStamp, &row.SKU, &row.Name, &row.Amount,
 			&row.Price, &row.Omzet, &row.Purchase, &row.Profit,
 		)
 		row.Omzet = row.Price * float64(row.Amount)
-		transactionReport = append(transactionReport, row)
+		transaction = append(transaction, row)
 
 		// Summary
 		summary.TotalAmount += row.Amount
 		summary.TotalOmzet += row.Omzet
 		summary.TotalProfit += row.Profit
 
-		if i > 0 && transactionReport[i].OrderID != transactionReport[i-1].OrderID {
-			summary.TotalSales += 1
+		if i > 0 && transaction[i].OrderID != transaction[i-1].OrderID {
+			summary.TotalSales++
 		} else if i == 0 {
 			summary.TotalSales = 1
 		}
-		i += 1
+		i++
 	}
 	summary.PrintDate = strftime.Format("%d %B %Y", time.Now())
 
 	// Report
-	report := SalesReport{
-		Items:   transactionReport,
+	report := salesReport{
+		Items:   transaction,
 		Summary: summary,
 	}
 	rows.Close()

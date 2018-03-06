@@ -2,23 +2,22 @@ package api
 
 import "net/http"
 
-// Item type with SKU, Name and Total
-type Item struct {
+// item type with SKU, Name and Total
+type item struct {
 	SKU   string `json:"sku"`
 	Name  string `json:"name"`
 	Total int    `json:"total"`
 }
 
-type Items struct {
-	Items []Item `json:"items"`
+type items struct {
+	Items []item `json:"items"`
 }
 
 // ItemsHandleFunc to be used as http.HandleFunc for Item API
 func ItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
-		items := Items{Items: GetItems()}
-		writeJSON(w, items)
+		writeJSON(w, items{Items: getItems()})
 	default:
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Unsupported request method."))
@@ -26,8 +25,8 @@ func ItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get Items from database
-func GetItems() []Item {
-	items := []Item{}
+func getItems() []item {
+	it := []item{}
 	rows, _ := DB.Query(`
 		SELECT sku, name, COALESCE(SUM(amount),0) AS total
 		FROM items i LEFT JOIN stock s 
@@ -35,10 +34,10 @@ func GetItems() []Item {
 	`)
 
 	for rows.Next() {
-		row := Item{}
+		row := item{}
 		rows.Scan(&row.SKU, &row.Name, &row.Total)
-		items = append(items, row)
+		it = append(it, row)
 	}
 
-	return items
+	return it
 }
