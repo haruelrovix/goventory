@@ -9,11 +9,12 @@ CREATE TABLE warehouses(
 );
 
 CREATE TABLE stock(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   item_sku VARCHAR(20),
   warehouse_id INT,
   amount INT,
   FOREIGN KEY(item_sku) REFERENCES items(sku),
-  FOREIGN KEY(warehouse_id) REFERENCES warehouses(warehouse_id)
+  FOREIGN KEY(warehouse_id) REFERENCES warehouses(id)
 );
 
 CREATE TABLE TransactionTypes(

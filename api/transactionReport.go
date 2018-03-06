@@ -64,9 +64,9 @@ func TransactionReportHandleFunc(w http.ResponseWriter, r *http.Request) {
 		report := createSalesReport(startDate, endDate)
 		report.Summary.StartDate = strftime.Format("%d %B %Y", from)
 		report.Summary.EndDate = strftime.Format("%d %B %Y", to)
-		writeJSON(w, report)
+		WriteJSON(w, report)
 	default:
-		writeDefaultResponse(w)
+		WriteDefaultResponse(w)
 	}
 }
 

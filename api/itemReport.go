@@ -32,9 +32,9 @@ func ItemReportHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
 		report := createReport()
-		writeJSON(w, report)
+		WriteJSON(w, report)
 	default:
-		writeDefaultResponse(w)
+		WriteDefaultResponse(w)
 	}
 }
 

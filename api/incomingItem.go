@@ -25,9 +25,9 @@ type incomingItems struct {
 func IncomingItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
-		writeJSON(w, incomingItems{Items: getIncomingItems()})
+		WriteJSON(w, incomingItems{Items: getIncomingItems()})
 	default:
-		writeDefaultResponse(w)
+		WriteDefaultResponse(w)
 	}
 }
 

@@ -26,6 +26,11 @@ func main() {
 	// Handle HTTP request
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/items", api.ItemsHandleFunc)
+	http.HandleFunc("/api/items/", api.ItemHandleFunc)
+	http.HandleFunc("/api/warehouses", api.WarehousesHandleFunc)
+	http.HandleFunc("/api/warehouses/", api.WarehouseHandleFunc)
+	http.HandleFunc("/api/stock", api.StocksHandleFunc)
+	http.HandleFunc("/api/stock/", api.StockHandleFunc)
 	http.HandleFunc("/api/barangmasuk", api.IncomingItemsHandleFunc)
 	http.HandleFunc("/api/barangkeluar", api.OutgoingItemsHandleFunc)
 	http.HandleFunc("/api/nilaibarang", api.ItemReportHandleFunc)
