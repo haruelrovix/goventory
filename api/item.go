@@ -138,7 +138,6 @@ func deleteItem(sku string) bool {
 	if err != nil {
 		return false
 	}
-
 	return true
 }
 
