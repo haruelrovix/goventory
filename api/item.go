@@ -46,6 +46,13 @@ func ItemHandleFunc(w http.ResponseWriter, r *http.Request) {
 	sku := r.URL.Path[len("/api/items/"):]
 
 	switch method := r.Method; method {
+	case http.MethodGet:
+		item, found := getItem(sku)
+		if found {
+			WriteJSON(w, item)
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+		}
 	case http.MethodDelete:
 		ok := deleteItem(sku)
 		if !ok {
@@ -100,6 +107,17 @@ func createItem(it item) (string, bool) {
 	}
 
 	return it.SKU, true
+}
+
+// getItem returns the item for a given SKU
+func getItem(sku string) (item, bool) {
+	var name string
+	err := DB.QueryRow("SELECT name FROM items WHERE sku = ?", sku).Scan(&name)
+	if err != nil {
+		return item{}, false
+	}
+
+	return item{SKU: sku, Name: name}, true
 }
 
 // deleteItem removes an item from items table
