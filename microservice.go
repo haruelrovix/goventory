@@ -33,6 +33,7 @@ func main() {
 	http.HandleFunc("/api/stock/", api.StockHandleFunc)
 	http.HandleFunc("/api/barangmasuk", api.IncomingItemsHandleFunc)
 	http.HandleFunc("/api/barangkeluar", api.OutgoingItemsHandleFunc)
+	http.HandleFunc("/api/barangkeluar/", api.OutgoingItemHandleFunc)
 	http.HandleFunc("/api/nilaibarang", api.ItemReportHandleFunc)
 	http.HandleFunc("/api/penjualan", api.TransactionReportHandleFunc)
 
