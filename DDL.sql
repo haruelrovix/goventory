@@ -23,7 +23,7 @@ CREATE TABLE TransactionTypes(
 );
 
 CREATE TABLE transactions(
-  id INT PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   amount INT,
   note VARCHAR(50),
   price NUMERIC,
