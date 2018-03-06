@@ -145,8 +145,8 @@ func deleteItem(sku string) bool {
 // updateItem updates an existing item
 func updateItem(sku string, it item) bool {
 	_, err := DB.Exec(
-		"UPDATE items SET sku = " + sku + ", name = " +
-			it.Name + " WHERE sku = '" + sku + "'",
+		"UPDATE items SET sku = '" + sku + "', name = '" +
+			it.Name + "' WHERE sku = '" + sku + "'",
 	)
 	if err != nil {
 		return false
