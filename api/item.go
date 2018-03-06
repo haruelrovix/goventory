@@ -53,6 +53,18 @@ func ItemHandleFunc(w http.ResponseWriter, r *http.Request) {
 		} else {
 			w.WriteHeader(http.StatusNotFound)
 		}
+	case http.MethodPut:
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		item := fromJSON(body)
+		exists := updateItem(sku, item)
+		if exists {
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+		}
 	case http.MethodDelete:
 		ok := deleteItem(sku)
 		if !ok {
@@ -127,5 +139,17 @@ func deleteItem(sku string) bool {
 		return false
 	}
 
+	return true
+}
+
+// updateItem updates an existing item
+func updateItem(sku string, it item) bool {
+	_, err := DB.Exec(
+		"UPDATE items SET sku = " + sku + ", name = " +
+			it.Name + " WHERE sku = '" + sku + "'",
+	)
+	if err != nil {
+		return false
+	}
 	return true
 }
