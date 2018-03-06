@@ -11,12 +11,14 @@ import (
 // DB driver
 var DB *sql.DB
 
-func writeDefaultResponse(w http.ResponseWriter) {
+// WriteDefaultResponse writes Bad Request response
+func WriteDefaultResponse(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusBadRequest)
 	w.Write([]byte("Unsupported request method."))
 }
 
-func writeJSON(w http.ResponseWriter, i interface{}) {
+// WriteJSON to be used for marshalling interface type
+func WriteJSON(w http.ResponseWriter, i interface{}) {
 	result, err := json.Marshal(i)
 	if err != nil {
 		panic(err)

@@ -24,9 +24,9 @@ func OutgoingItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
 		OutgoingItems := outgoingItems{Items: getOutgoingItems()}
-		writeJSON(w, OutgoingItems)
+		WriteJSON(w, OutgoingItems)
 	default:
-		writeDefaultResponse(w)
+		WriteDefaultResponse(w)
 	}
 }
 

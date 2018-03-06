@@ -1,6 +1,10 @@
 package api
 
-import "net/http"
+import (
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
+)
 
 // item type with SKU, Name and Total
 type item struct {
@@ -17,7 +21,20 @@ type items struct {
 func ItemsHandleFunc(w http.ResponseWriter, r *http.Request) {
 	switch method := r.Method; method {
 	case http.MethodGet:
-		writeJSON(w, items{Items: getItems()})
+		WriteJSON(w, items{Items: getItems()})
+	case http.MethodPost:
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		item := fromJSON(body)
+		sku, created := createItem(item)
+		if created {
+			w.Header().Add("Location", "/api/items/"+sku)
+			w.WriteHeader(http.StatusCreated)
+		} else {
+			w.WriteHeader(http.StatusConflict)
+		}
 	default:
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Unsupported request method."))
@@ -40,4 +57,29 @@ func getItems() []item {
 	}
 
 	return it
+}
+
+// fromJSON to be used for unmarshalling of Item type
+func fromJSON(data []byte) item {
+	item := item{}
+	err := json.Unmarshal(data, &item)
+	if err != nil {
+		panic(err)
+	}
+
+	return item
+}
+
+// createItem creates a new Item if it does not exist
+func createItem(it item) (string, bool) {
+	_, err := DB.Exec(
+		"INSERT INTO items (sku, name) VALUES (?, ?)",
+		it.SKU, it.Name,
+	)
+
+	if err != nil {
+		return "", false
+	}
+
+	return it.SKU, true
 }
